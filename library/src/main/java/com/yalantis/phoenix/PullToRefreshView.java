@@ -17,6 +17,7 @@ import android.view.animation.Transformation;
 import android.widget.AbsListView;
 import android.widget.ImageView;
 
+import com.yalantis.phoenix.refresh_view.ArrowRefreshView;
 import com.yalantis.phoenix.refresh_view.BaseRefreshView;
 import com.yalantis.phoenix.refresh_view.SunRefreshView;
 import com.yalantis.phoenix.util.Utils;
@@ -25,12 +26,13 @@ import java.security.InvalidParameterException;
 
 public class PullToRefreshView extends ViewGroup {
 
-    private static final int DRAG_MAX_DISTANCE = 120;
+    private static final int DRAG_MAX_DISTANCE = 64;
     private static final float DRAG_RATE = .5f;
     private static final float DECELERATE_INTERPOLATION_FACTOR = 2f;
 
-    public static final int STYLE_SUN = 0;
-    public static final int MAX_OFFSET_ANIMATION_DURATION = 700;
+    public static final int STYLE_SUN   = 0;
+    public static final int STYLE_ARROW = 1;
+    public static final int MAX_OFFSET_ANIMATION_DURATION = 300;
 
     private static final int INVALID_POINTER = -1;
 
@@ -63,7 +65,7 @@ public class PullToRefreshView extends ViewGroup {
     public PullToRefreshView(Context context, AttributeSet attrs) {
         super(context, attrs);
         TypedArray a = context.obtainStyledAttributes(attrs, R.styleable.RefreshView);
-        final int type = a.getInteger(R.styleable.RefreshView_type, STYLE_SUN);
+        final int type = a.getInteger(R.styleable.RefreshView_type, STYLE_ARROW);
         a.recycle();
 
         mDecelerateInterpolator = new DecelerateInterpolator(DECELERATE_INTERPOLATION_FACTOR);
@@ -85,6 +87,9 @@ public class PullToRefreshView extends ViewGroup {
         switch (type) {
             case STYLE_SUN:
                 mBaseRefreshView = new SunRefreshView(getContext(), this);
+                break;
+            case STYLE_ARROW:
+                mBaseRefreshView = new ArrowRefreshView(getContext(), this);
                 break;
             default:
                 throw new InvalidParameterException("Type does not exist");
@@ -196,6 +201,10 @@ public class PullToRefreshView extends ViewGroup {
                 if (mCurrentDragPercent < 0) {
                     return false;
                 }
+
+                /**
+                 * 计算实际需要拖动的距离
+                 * 如果超出最大拖到距离，那么拖到速度变慢 */
                 float boundedDragPercent = Math.min(1f, Math.abs(mCurrentDragPercent));
                 float extraOS = Math.abs(scrollTop) - mTotalDragDistance;
                 float slingshotDist = mTotalDragDistance;
@@ -410,8 +419,8 @@ public class PullToRefreshView extends ViewGroup {
         mListener = listener;
     }
 
-    public static interface OnRefreshListener {
-        public void onRefresh();
+    public interface OnRefreshListener {
+        void onRefresh();
     }
 
 }

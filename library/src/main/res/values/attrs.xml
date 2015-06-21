@@ -2,7 +2,8 @@
 <resources>
     <declare-styleable name="RefreshView">
         <attr name="type" format="enum">
-            <enum name="sun" value="0" />
+            <enum name="sun" value="0"/>
+            <enum name="arrow" value="1"/>
         </attr>
     </declare-styleable>
 </resources>
