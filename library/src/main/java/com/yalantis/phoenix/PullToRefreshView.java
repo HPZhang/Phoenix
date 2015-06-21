@@ -19,7 +19,6 @@ import android.widget.ImageView;
 
 import com.yalantis.phoenix.refresh_view.ArrowRefreshView;
 import com.yalantis.phoenix.refresh_view.BaseRefreshView;
-import com.yalantis.phoenix.refresh_view.SunRefreshView;
 import com.yalantis.phoenix.util.Utils;
 
 import java.security.InvalidParameterException;
@@ -30,8 +29,7 @@ public class PullToRefreshView extends ViewGroup {
     private static final float DRAG_RATE = .5f;
     private static final float DECELERATE_INTERPOLATION_FACTOR = 2f;
 
-    public static final int STYLE_SUN   = 0;
-    public static final int STYLE_ARROW = 1;
+    public static final int STYLE_ARROW = 0;
     public static final int MAX_OFFSET_ANIMATION_DURATION = 300;
 
     private static final int INVALID_POINTER = -1;
@@ -85,9 +83,6 @@ public class PullToRefreshView extends ViewGroup {
     public void setRefreshStyle(int type) {
         setRefreshing(false);
         switch (type) {
-            case STYLE_SUN:
-                mBaseRefreshView = new SunRefreshView(getContext(), this);
-                break;
             case STYLE_ARROW:
                 mBaseRefreshView = new ArrowRefreshView(getContext(), this);
                 break;
